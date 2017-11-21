@@ -1,5 +1,5 @@
 /*!
- * goldenaxe v0.1.1
+ * jsforcelayout3 v0.1.1
  *
  * Copyright 2017 kenshinee
  * Licensed under the Apache License v2.0
@@ -9,7 +9,7 @@
  *
  * A force-directed layout algorithm in 3D space
  */
-GoldenAxe = function () {
+JSForceLayout3 = function () {
     var obj = {};
 
     var ga_nodes = {}; // array to hold nodes
