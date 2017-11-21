@@ -25,7 +25,13 @@ jForceLayout = function () {
 
     var maxNodeCount = 1;
     var maxEdgeCount = 1;
+	
+    var _dimension = 3;
 
+    obj.setDimension = function (dimension) {
+	_dimension = dimension;	    
+    }
+	
     obj.setIdealDistance = function (distance) { // ideal distance between objects
         idealD = distance;
     }
@@ -59,9 +65,10 @@ jForceLayout = function () {
 
     obj.addNode = function (id, name) {
 
-		x = Math.random() * 5;
-		y = Math.random() * 5;
-		z = Math.random() * 5;
+	x = Math.random() * 5;
+	y = Math.random() * 5;
+
+	if (_dimension==2) z = 0; else 	z = Math.random() * 5;
 		
         var pt = new GAPoint(id, name, x, y, z);
         ga_nodes[id] = pt;
@@ -160,8 +167,8 @@ jForceLayout = function () {
 
                         var ip1 = getPointInBetween(p1, p2, d, diff);
                         n1.x = ip1.x;
-                        n1.y = ip1.y;
-                        n1.z = ip1.z;
+                        n1.y = ip1.y;                        
+			if (_dimension==2) n1.z = 0; else n1.z = ip1.z;
 
                     } else if (d < minD) { // too close
 
@@ -171,8 +178,9 @@ jForceLayout = function () {
 
                         var ip2 = getPointInBetween(p2, p1, d, -diff);
                         n2.x = ip2.x;
-                        n2.y = ip2.y;
-                        n2.z = ip2.z;
+                        n2.y = ip2.y;			    
+			if (_dimension==2) n2.z = 0; else n2.z = ip2.z;
+                        
                     }
 
                 } else { /// nodes not related		
@@ -185,7 +193,7 @@ jForceLayout = function () {
                         var ip2 = getPointInBetween(p2, p1, d, -diff);
                         n2.x = ip2.x;
                         n2.y = ip2.y;
-                        n2.z = ip2.z;
+                        if (_dimension==2) n2.z = 0; else n2.z = ip2.z;
 
                     }
                 }
