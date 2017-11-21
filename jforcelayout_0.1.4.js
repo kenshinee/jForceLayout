@@ -1,5 +1,5 @@
 /*!
- * jsforcelayout3 v0.1.2
+ * jsforcelayout3 v0.1.4
  *
  * Copyright 2017 kenshinee
  * Licensed under the Apache License v2.0
@@ -7,7 +7,7 @@
  *
  * Making this world a better place, one code at a time @kenshinee
  *
- * A force-directed layout algorithm in 3D space
+ * A force-directed layout algorithm in 2D/3D space
  */
 jForceLayout = function () {
     var obj = {};
@@ -17,7 +17,7 @@ jForceLayout = function () {
 
     var idealD = 300; // ideal distance
     var idealB = 1500; // maximum distance
-    var minD = 100; // minimum distance
+    var minD = 300; // minimum distance
 
     var _gaTimer;
     var _gaCounter;
@@ -29,7 +29,15 @@ jForceLayout = function () {
     var _dimension = 3;
 
     obj.setDimension = function (dimension) {
-	_dimension = dimension;	    
+		
+		_dimension = dimension;	    
+		console.log("set dimenion as " + _dimension);
+		if (_dimension == 3) {
+			for (var key1 in ga_nodes) {
+				var node = ga_nodes[key1];
+				node.z = Math.random() * 5;
+			}
+		}
     }
 	
     obj.setIdealDistance = function (distance) { // ideal distance between objects
@@ -65,13 +73,13 @@ jForceLayout = function () {
 
     obj.addNode = function (id, name) {
 
-	x = Math.random() * 5;
-	y = Math.random() * 5;
+		x = Math.random() * 5;
+		y = Math.random() * 5;
 
-	if (_dimension==2) z = 0; else 	z = Math.random() * 5;
-		
-        var pt = new GAPoint(id, name, x, y, z);
-        ga_nodes[id] = pt;
+		if (_dimension==2) z = 0; else 	z = Math.random() * 5;
+			
+			var pt = new GAPoint(id, name, x, y, z);
+			ga_nodes[id] = pt;
 
 
     }
@@ -82,11 +90,15 @@ jForceLayout = function () {
 
     obj.addEdge = function (ID1, ID2, weight) {
 		
-	var id = (ID1 + ID2).hashCode();
+		var id = (ID1 + ID2).hashCode();
 		 
         if (!ga_edges[id]) {
             var ed = new GAEdge(id, ID1, ID2, weight);
             ga_edges[id] = ed;
+			
+			ga_nodes[ID2].x = ga_nodes[ID1].x + (Math.random() * 2 - 1);
+			ga_nodes[ID2].y = ga_nodes[ID1].y + (Math.random() * 2 - 1);
+			ga_nodes[ID2].z = ga_nodes[ID1].z + (Math.random() * 2 - 1);
 			
         } else {
 			
@@ -142,10 +154,10 @@ jForceLayout = function () {
             var diff = d / 100;
             var p1 = new GAVector(n1.x, n1.y, n1.z);
             var p2 = new GAVector(xc.x, xc.y, xc.z);
-            var ip2 = getPointInBetween(p1, p2, d, diff);
-            n1.x = ip2.x;
-            n1.y = ip2.y;
-            n1.z = ip2.z;
+            var ip = getPointInBetween(p1, p2, d, diff, _dimension);
+            n1.x = ip.x;
+            n1.y = ip.y;
+            n1.z = ip.z;
 
             for (var key2 in ga_nodes) {
                 totalweight = 0;
@@ -161,25 +173,33 @@ jForceLayout = function () {
 
                     if (d > idealD) { // too far apart
 					
-                        var diff = (d - idealD) / 10;
+                        var diff = (d - idealD)/10;
                         var p1 = new GAVector(n1.x, n1.y, n1.z);
                         var p2 = new GAVector(n2.x, n2.y, n2.z);
 
-                        var ip1 = getPointInBetween(p1, p2, d, diff);
-                        n1.x = ip1.x;
-                        n1.y = ip1.y;                        
-			if (_dimension==2) n1.z = 0; else n1.z = ip1.z;
+                        var ip = getPointInBetween(p1, p2, d, diff, _dimension);
+						var ip2 = getPointInBetween(p2, p1, d, diff, _dimension);
+                        n1.x = ip.x;
+                        n1.y = ip.y;                        
+						n1.z = ip.z;
+						n2.x = ip2.x;
+                        n2.y = ip2.y;                        
+						n2.z = ip2.z;
 
                     } else if (d < minD) { // too close
 
-                        var diff = (minD - d) / 20;
+                        var diff = (d - minD)/30;
                         var p1 = new GAVector(n1.x, n1.y, n1.z);
                         var p2 = new GAVector(n2.x, n2.y, n2.z);
 
-                        var ip2 = getPointInBetween(p2, p1, d, -diff);
-                        n2.x = ip2.x;
-                        n2.y = ip2.y;			    
-			if (_dimension==2) n2.z = 0; else n2.z = ip2.z;
+                        var ip = getPointInBetween(p1, p2, d, diff, _dimension);
+						var ip2 = getPointInBetween(p2, p1, d, diff, _dimension);
+                        n1.x = ip.x;
+                        n1.y = ip.y;
+						n1.z = ip.z;
+						n2.x = ip2.x;
+                        n2.y = ip2.y;                        
+						n2.z = ip2.z;						
                         
                     }
 
@@ -187,13 +207,17 @@ jForceLayout = function () {
 
                     if (d < idealB) { // nodes are not related, too close
 						
-                        var diff = (idealB - d) / 30;
+                        var diff = (d - idealB) / 1000;
                         var p1 = new GAVector(n1.x, n1.y, n1.z);
                         var p2 = new GAVector(n2.x, n2.y, n2.z);
-                        var ip2 = getPointInBetween(p2, p1, d, -diff);
-                        n2.x = ip2.x;
+                        var ip = getPointInBetween(p1, p2, d, diff, _dimension);
+						var ip2 = getPointInBetween(p2, p1, d, diff, _dimension);
+                        n1.x = ip.x;
+                        n1.y = ip.y;
+						n1.z = ip.z;
+						n2.x = ip2.x;
                         n2.y = ip2.y;
-                        if (_dimension==2) n2.z = 0; else n2.z = ip2.z;
+						n2.z = ip2.z;
 
                     }
                 }
@@ -254,12 +278,17 @@ function getDistance(v1, v2) {
     return Math.sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-function getPointInBetween(pointA, pointB, distance, length) {
+function getPointInBetween(pointA, pointB, distance, length, dimension) {
 
     if (distance == 0) distance = 0.001; // preventing division by zero
     var obj = new GAVector();
+	
     obj.x = pointA.x + (pointB.x - pointA.x) / distance * length;
     obj.y = pointA.y + (pointB.y - pointA.y) / distance * length;
-    obj.z = pointA.z + (pointB.z - pointA.z) / distance * length;
+	if (dimension==2) {
+		obj.z = pointA.z - pointA.z /100;
+	} else {
+		obj.z = pointA.z + (pointB.z - pointA.z) / distance * length;
+	}
     return obj;
 }
