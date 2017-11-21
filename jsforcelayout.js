@@ -1,5 +1,5 @@
 /*!
- * jsforcelayout3 v0.1.1
+ * jsforcelayout3 v0.1.2
  *
  * Copyright 2017 kenshinee
  * Licensed under the Apache License v2.0
