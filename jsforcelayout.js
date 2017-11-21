@@ -16,8 +16,8 @@ JSForceLayout3 = function () {
     var ga_edges = {}; // array to hold edges
 
     var idealD = 300; // ideal distance
-    var idealB = 3000; // maximum distance
-    var minD = 300; // minimum distance
+    var idealB = 1500; // maximum distance
+    var minD = 100; // minimum distance
 
     var _gaTimer;
     var _gaCounter;
@@ -57,9 +57,13 @@ JSForceLayout3 = function () {
     }
 
 
-    obj.addNode = function (id, name, x, y, z, weight) {
+    obj.addNode = function (id, name) {
 
-        var pt = new GAPoint(id, name, x, y, z, weight);
+		x = Math.random() * 5;
+		y = Math.random() * 5;
+		z = Math.random() * 5;
+		
+        var pt = new GAPoint(id, name, x, y, z);
         ga_nodes[id] = pt;
 
 
@@ -69,12 +73,18 @@ JSForceLayout3 = function () {
         delete ga_edges[id];
     }
 
-    obj.addEdge = function (id, ID1, ID2, weight) {
+    obj.addEdge = function (ID1, ID2, weight) {
+		
+		 var id = (ID1 + ID2).hashCode();
+		 
         if (!ga_edges[id]) {
             var ed = new GAEdge(id, ID1, ID2, weight);
             ga_edges[id] = ed;
+			
         } else {
+			
             ga_edges[id].weight += weight;
+			
         }
     }
 
@@ -134,7 +144,7 @@ JSForceLayout3 = function () {
                 totalweight = 0;
                 var n2 = ga_nodes[key2];
 
-                var k1 = (n1.id + '|||' + n2.id).hashCode();
+                var k1 = (n1.id + n2.id).hashCode();
 
                 if (ga_edges[k1]) totalweight += ga_edges[k1].weight;
 
@@ -142,14 +152,13 @@ JSForceLayout3 = function () {
 
                 if (totalweight > 0) { // both nodes are connected
 
-
                     if (d > idealD) { // too far apart
-                        var diff = (d - idealD) / 30;
+					
+                        var diff = (d - idealD) / 10;
                         var p1 = new GAVector(n1.x, n1.y, n1.z);
                         var p2 = new GAVector(n2.x, n2.y, n2.z);
 
                         var ip1 = getPointInBetween(p1, p2, d, diff);
-                        //var ip2 = getPointInBetween(p2, p1, d, diff);
                         n1.x = ip1.x;
                         n1.y = ip1.y;
                         n1.z = ip1.z;
@@ -159,28 +168,24 @@ JSForceLayout3 = function () {
                         var diff = (minD - d) / 20;
                         var p1 = new GAVector(n1.x, n1.y, n1.z);
                         var p2 = new GAVector(n2.x, n2.y, n2.z);
-                        //var ip1 = getPointInBetween(p1, p2, d, -diff);
+
                         var ip2 = getPointInBetween(p2, p1, d, -diff);
                         n2.x = ip2.x;
                         n2.y = ip2.y;
                         n2.z = ip2.z;
-
-                        //if (key2 == "-677963018" && key1 == "854585343") console.log("too close");
-
                     }
 
-                } else { /// nodes not related
+                } else { /// nodes not related		
 
                     if (d < idealB) { // nodes are not related, too close
-                        var diff = (idealB - d) / 200;
+						
+                        var diff = (idealB - d) / 30;
                         var p1 = new GAVector(n1.x, n1.y, n1.z);
                         var p2 = new GAVector(n2.x, n2.y, n2.z);
-                        //var ip1 = getPointInBetween(p1, p2, d, -diff);
                         var ip2 = getPointInBetween(p2, p1, d, -diff);
                         n2.x = ip2.x;
                         n2.y = ip2.y;
                         n2.z = ip2.z;
-
 
                     }
                 }
@@ -194,13 +199,13 @@ JSForceLayout3 = function () {
 
     obj.resetAll();
 
-
-    String.prototype.hashCode = function () {
+	String.prototype.hashCode = function () {
         for (var ret = 0, i = 0, len = this.length; i < len; i++) {
             ret = (31 * ret + this.charCodeAt(i)) << 0;
         }
         return ret;
     };
+
 
     return obj;
 }
@@ -213,14 +218,14 @@ GAVector = function (_x, _y, _z) {
     return obj;
 }
 
-GAPoint = function (_id, _name, _x, _y, _z, _w) {
+GAPoint = function (_id, _name, _x, _y, _z) {
     var obj = {};
     obj.id = _id;
     obj.name = _name
     obj.x = _x;
     obj.y = _y;
     obj.z = _z;
-    obj.weight = _w;
+    //obj.weight = _w;
     return obj;
 }
 
@@ -250,4 +255,3 @@ function getPointInBetween(pointA, pointB, distance, length) {
     obj.z = pointA.z + (pointB.z - pointA.z) / distance * length;
     return obj;
 }
-
