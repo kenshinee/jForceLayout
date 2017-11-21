@@ -75,7 +75,7 @@ jForceLayout = function () {
 
     obj.addEdge = function (ID1, ID2, weight) {
 		
-		 var id = (ID1 + ID2).hashCode();
+	var id = (ID1 + ID2).hashCode();
 		 
         if (!ga_edges[id]) {
             var ed = new GAEdge(id, ID1, ID2, weight);
