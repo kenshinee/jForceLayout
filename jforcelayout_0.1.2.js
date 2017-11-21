@@ -9,7 +9,7 @@
  *
  * A force-directed layout algorithm in 3D space
  */
-JSForceLayout3 = function () {
+jForceLayout = function () {
     var obj = {};
 
     var ga_nodes = {}; // array to hold nodes
