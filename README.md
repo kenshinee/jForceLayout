@@ -1,6 +1,6 @@
-# jsforcelayout3
+# jForceLayout
 
-JSForceLayout3 is a JavaScript Force-Directed Layout algorithm that is independent of any other library. The library itself does all the heavy lifting without no visualisation. This makes it easy to integrate with any custom visuals such as three.js.
+jForceLayout is a JavaScript Force-Directed Layout algorithm that is independent of any other library. The library itself does all the heavy lifting without no visualisation. This makes it easy to integrate with any custom visuals such as three.js.
 
 To use this library, include it in your html:
 
@@ -12,7 +12,7 @@ To use this library, include it in your html:
 
 ```
 <script>
-  var layout = new JSForceLayout3();
+  var layout = new jForceLayout();
 
   // add nodes (entity)
   layout.addNode("node1","Hobbies");
