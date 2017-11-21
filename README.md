@@ -15,19 +15,19 @@ To use this library, include it in your html:
   var layout = new JSForceLayout3();
 
   // add nodes (entity)
-  layout.addNode("node1","Hobbies",0,0,0,1);
-  layout.addNode("node2","Cycling",0,0,0,1);
-  layout.addNode("node3","Reading",0,0,0,1);
-  layout.addNode("node4","Comedy",0,0,0,1);
-  layout.addNode("node5","Exercise",0,0,0,1);
-  layout.addNode("node6","Jogging",0,0,0,1);
+  layout.addNode("node1","Hobbies");
+  layout.addNode("node2","Cycling");
+  layout.addNode("node3","Reading");
+  layout.addNode("node4","Comedy");
+  layout.addNode("node5","Exercise");
+  layout.addNode("node6","Jogging");
   
   // add edges (links between nodes)
-  layout.addEdge("edge1","node1","node3",1); // link Hobbies to Reading
-  layout.addEdge("edge2","node1","node5",1); // link Hobbies to Exercise
-  layout.addEdge("edge3","node3","node4",1); // link Reading to Comedy
-  layout.addEdge("edge4","node5","node2",1); // link Exercise to Cycling
-  layout.addEdge("edge5","node5","node6",1); // link Exercise to Jogging
+  layout.addEdge("node1","node3",1); // link Hobbies to Reading
+  layout.addEdge("node1","node5",1); // link Hobbies to Exercise
+  layout.addEdge("node3","node4",1); // link Reading to Comedy
+  layout.addEdge("node5","node2",1); // link Exercise to Cycling
+  layout.addEdge("node5","node6",1); // link Exercise to Jogging
   
   layout.startRender(layoutRender);
   
