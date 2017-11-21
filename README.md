@@ -8,9 +8,9 @@ To use this library, include it in your html:
 <script type="text/javascript" src="js/jsforcelayout3.js"></script>
 
 
-Example of usage:
+## Example of usage:
 
-
+```
 <script>
   var layout = new JSForceLayout3();
 
@@ -44,6 +44,6 @@ Example of usage:
       }
   }
 
-  
-  
+  ```
+  </script>
 
